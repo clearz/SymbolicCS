@@ -95,7 +95,8 @@ namespace SymbolicCS
             var e2 = op.Right;
             var e1s = e1.Simplify();
             var e2s = e2.Simplify();
-            if (e1s != e1 || e2s != e2) // if op.Left or op.Right can been simplified then try and simplify further
+            // if op.Left or op.Right can been simplified then try and simplify further
+            if (e1s != e1 || e2s != e2)
                 switch (op)
                 {
                     case Add _:
@@ -110,8 +111,8 @@ namespace SymbolicCS
                         return new Pow(e1s, e2s).Simplify();    
                 }
 
-
-            return op; // No furher simplification possible so just return op.
+            // No furher simplification possible so just return op.
+            return op; 
         }
 
 
@@ -120,8 +121,9 @@ namespace SymbolicCS
         {
             var e1 = op.Value;
             var e1s = e1.Simplify();
+            // If e1s is a number then preform System.Math.[op] on value else continue simplifying.
             if (e1s != e1)
-                switch (op) // If e1s is a number then preform System.Math.[op] on value else continue simplifying.
+                switch (op) 
                 {
                     case Exp _:
                         return e1s is Num n1 
