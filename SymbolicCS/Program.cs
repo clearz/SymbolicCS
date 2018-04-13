@@ -15,21 +15,37 @@ namespace SymbolicCS
             {
                 try
                 {
-                    Console.Write(PROMPT); 
+                    Console.Write(PROMPT);
                     var str = Console.ReadLine();
                     if (HandleCmd(str)) continue;
 
                     var exp = parser.Parse(str);
-                    Console.Write("Parsed:\n\t");
-                    exp.Print();
-                    Console.Write("Simplified:\n\t");
-                    exp = exp.Simplify();
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.Write("Parsed:\t");
+                    Console.ForegroundColor = ConsoleColor.Gray;
                     exp.Print();
                     Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    exp.DisplayTree();
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.Write("\nSimplified: ");
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    exp = exp.Simplify();
+                    exp.Print();
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    if (!(exp is Num || exp is Var))
+                    {
+                        Console.WriteLine();
+                        exp.DisplayTree();
+                    }
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
+                }
+                finally
+                {
+                    Console.ResetColor();
                 }
 
                 bool HandleCmd(string str)
@@ -43,6 +59,8 @@ namespace SymbolicCS
                         case "cls":
                             Console.Clear();
                             break;
+                        case "":
+                            return true;
                         default:
                             return false;
                     }

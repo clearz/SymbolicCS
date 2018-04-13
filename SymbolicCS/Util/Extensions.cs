@@ -53,6 +53,44 @@ namespace SymbolicCS.Util
             }
         }
 
+        // Generate a text based representation of the expression tree
+        public static void DisplayTree(this IExpression ans, Action<object> output = null)
+        {
+            output = output ?? Console.Write;
+            var generator = new TreeGenerator(); // -(-(3*Log((-5 + -3*2)-6*-(-Sin(-5/3) + Cos(-3/2))---6/4*a)))
+            var root = BuildTree(ans);
+            string text = generator.CreateTree(root);
+            output(text);
+
+
+            TextNode BuildTree(IExpression expr)
+            {
+                var lbl = GetLabel(expr);
+                if (expr is IBinaryExpression be)
+                    return new TextNode(lbl, BuildTree(be.Left), BuildTree(be.Right));
+                if (expr is Neg nx)
+                    return new TextNode(lbl, left: BuildTree(nx.Value));
+                if (expr is IFuncExpression fx)
+                    return new TextNode(lbl, left: BuildTree(fx.Value));
+
+                return new TextNode(lbl);
+
+            }
+
+            // Get a string representation of an IExpression
+            string GetLabel(IExpression e)
+            {
+                switch (e)
+                {
+                    case Num n:
+                        return n.Value.ToString(CultureInfo.CurrentCulture);
+                    case Var v:
+                        return v.Name.ToString();
+                    default:
+                        return e.GetType().Name;
+                }
+            }
+        }
         public static void Print(this IExpression e, Action<object> output = null)
         {
             output = output ?? Console.Write;
@@ -65,7 +103,7 @@ namespace SymbolicCS.Util
                 switch (ex)
                 {
                     case Num n:
-                        return n.Value;
+                        return System.Math.Round(n.Value, 2);
                     case Var v:
                         return v.Name;
                     case IBinaryExpression b:
