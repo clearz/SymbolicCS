@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using SymbolicCS.Parsing;
 using SymbolicCS.Util;
 
@@ -18,6 +17,7 @@ namespace SymbolicCS
                     Console.Write(PROMPT);
                     var str = Console.ReadLine();
                     if (HandleCmd(str)) continue;
+                    VsTools.ClearOutputWindow();
 
                     var exp = parser.Parse(str);
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
@@ -58,6 +58,9 @@ namespace SymbolicCS
                             break;
                         case "cls":
                             Console.Clear();
+                            break;
+                        case "clear":
+                            VsTools.ClearOutputWindow();
                             break;
                         case "":
                             return true;

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using SymbolicCS.Util;
 using static SymbolicCS.Parsing.Associativity;
 
 namespace SymbolicCS.Parsing

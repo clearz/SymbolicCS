@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Globalization;
-using System.Text;
 using AsciiTree;
 using SymbolicCS.Parsing;
 
@@ -53,6 +52,8 @@ namespace SymbolicCS.Util
             }
         }
 
+
+        [Conditional("DEBUG")]
         // Generate a text based representation of the expression tree
         public static void DisplayTree(this IExpression ans, Action<object> output = null)
         {
@@ -91,6 +92,8 @@ namespace SymbolicCS.Util
                 }
             }
         }
+
+        [Conditional("DEBUG")]
         public static void Print(this IExpression e, Action<object> output = null)
         {
             output = output ?? Console.Write;
@@ -103,7 +106,7 @@ namespace SymbolicCS.Util
                 switch (ex)
                 {
                     case Num n:
-                        return System.Math.Round(n.Value, 2);
+                        return Math.Round(n.Value, 2);
                     case Var v:
                         return v.Name;
                     case IBinaryExpression b:
