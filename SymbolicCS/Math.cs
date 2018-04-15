@@ -38,7 +38,7 @@ namespace SymbolicCS
                     return n2.Value.Simplify();
                 case Add a when a.Left is Num n:                       // Add(Num, ?) -> Add(? Num)
                     return Add(a.Right, n).Simplify();
-                case Add a when a.Right is Num n && n.Value == 0:       // Add(0, ?) -> ?
+                case Add a when a.Right is Num n && n.Value == 0:      // Add(0, ?) -> ?
                     return a.Left.Simplify();
                 case Add s when s.Right is Num n && n.Value < 0:       // Sub(?1, -?2) -> Add(?1, ?2)
                     return Sub(s.Left, new Num(-n.Value)).Simplify();
@@ -82,11 +82,11 @@ namespace SymbolicCS
                     return Num(1);
                 case Pow p when p.Right is Num n && n.Value == 1:      // Pow(?, 1) ->  ?
                     return p.Left.Simplify();
+#region **Expremental Rules**
                 case Add a when a.Left is Add a2 && a2.Left is Var v:  // Add(Add(Var, ?1), ?2) -> Add(Var, Add(?1, ?2))
                     return Add(Add(a.Right, a2.Right), v).Simplify();
                 case Mul a when a.Left is Mul a2 && a2.Left is Var v:  // Mul(Mul(Var, ?1), ?2) -> Mul(Var, Mul(?1, ?2))
                     return Mul(new Mul(a.Right, a2.Right), v).Simplify();
-#region **Expremental Rules**
                 case Add a when a.Left is Sub a2 && !(a2.Left is Num && a2.Right is Num):                      // Add(Sub(?1, ?2), ?3) -> Sub(Sub(?1, ?3), ?2)
                     return new Sub(new Add(a2.Left, a.Right), a2.Right).Simplify();
                 case Sub a when a.Left is Sub a2:                      // Sub(Sub(?1, ?2), ?3) -> Sub(?1, Add(?2, ?3))
