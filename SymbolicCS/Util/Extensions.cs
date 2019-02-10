@@ -53,7 +53,6 @@ namespace SymbolicCS.Util
         }
 
 
-        [Conditional("DEBUG")]
         // Generate a text based representation of the expression tree
         public static void DisplayTree(this IExpression ans, Action<object> output = null)
         {
@@ -93,7 +92,6 @@ namespace SymbolicCS.Util
             }
         }
 
-        [Conditional("DEBUG")]
         public static void Print(this IExpression e, Action<object> output = null)
         {
             output = output ?? Console.Write;

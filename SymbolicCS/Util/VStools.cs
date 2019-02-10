@@ -11,12 +11,30 @@ namespace SymbolicCS.Util
 {
     static class VsTools
     {
-        private static EnvDTE80.DTE2 vs_env = (EnvDTE80.DTE2)Marshal.GetActiveObject("VisualStudio.DTE.15.0");
+        private static readonly string Name;
+        static VsTools()
+        {
+            for (int i = 10; i <= 20; i++) // Not sure if there is a less hacky way to find the version of VS
+            {
+                var name = $"VisualStudio.DTE.{i}.0";
+                if(Type.GetTypeFromProgID(name, false) != null)
+                {
+                    Name = name;
+                    break;
+                }
+            }
+        }
         public static void Break(int line, string file)
         {
-            vs_env.Debugger.Breakpoints.Add(Line: line, File: file);
+            var ide = (EnvDTE.DTE)Marshal.GetActiveObject(Name);
+            if (ide != null)
+            {
+                ide.Debugger.Breakpoints.Add(Line: line, File: file);
+                Marshal.ReleaseComObject(ide);
+            }
         }
 
+        [Conditional("DEBUG")]
         public static void ClearOutputWindow()
         {
             if (!Debugger.IsAttached)
@@ -24,11 +42,10 @@ namespace SymbolicCS.Util
                 return;
             }
 
-            //Application.DoEvents();  // This is for Windows.Forms.
-            // This delay to get it to work. Unsure why. See http://stackoverflow.com/questions/2391473/can-the-visual-studio-debug-output-window-be-programatically-cleared
+
             Thread.Sleep(100);
             // In VS2008 use EnvDTE80.DTE2
-            EnvDTE.DTE ide = (EnvDTE.DTE)Marshal.GetActiveObject("VisualStudio.DTE.15.0");
+            var ide = (EnvDTE.DTE)Marshal.GetActiveObject(Name);
             if (ide != null)
             {
                 ide.ExecuteCommand("Edit.ClearOutputWindow", "");

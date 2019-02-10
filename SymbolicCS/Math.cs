@@ -17,6 +17,7 @@ namespace SymbolicCS
                 x.Print(o => Debug.Write(o));
                 x.DisplayTree(o => Debug.Write(o));
             }
+            else return x;
 
             switch (x)
             {
@@ -173,7 +174,7 @@ namespace SymbolicCS
             if (e1s != e1)
                 switch (op)
                 {
-                    case Neg a:
+                    case Neg _:
                         return new Neg(e1s).Simplify();
                 }
 

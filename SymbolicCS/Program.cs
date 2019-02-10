@@ -7,7 +7,7 @@ namespace SymbolicCS
     class Program
     {
         private const string PROMPT = ":> ";
-        static void Main(string[] args)
+        static void Main()
         {
             var parser = Parser.GetInstance();
             while (true)
@@ -59,11 +59,11 @@ namespace SymbolicCS
                         case "cls":
                             Console.Clear();
                             break;
+#if DEBUG
                         case "clear":
                             VsTools.ClearOutputWindow();
                             break;
-                        case "":
-                            return true;
+#endif
                         default:
                             return false;
                     }
